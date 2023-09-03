@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black"
+    tools:context=".MainActivity">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:weightSum="3"
+       android:orientation="horizontal">
+
+       >
+
+
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:textAlignment="center"
+           android:text="Start"
+           android:textColor="@color/white"
+           android:background="@android:color/transparent"
+           android:id="@+id/startStopButton"
+           android:onClick="startStopTapped"
+           />
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:textAlignment="center"
+           android:id="@+id/timerText"
+           android:textColor="@color/white"
+           android:text="00 : 00 : 00"
+           />
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:textAlignment="center"
+           android:text="Restart"
+           android:textColor="@color/white"
+           android:background="@android:color/transparent"
+           android:id="@+id/restartButton"
+           android:onClick="resetTapped"
+           />
+
+   </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <GridLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="4"
+            android:id="@+id/gridView"
+            >
+
+
+
+
+
+
+
+
+        </GridLayout>
+    </ScrollView>
+
+
+</LinearLayout>
