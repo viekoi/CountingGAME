@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CountingGame</string>
+    <string name="start_game">Bắt đầu</string>
+    <string name="restart_game">Chơi lại</string>
+    <string name="startGame_modal_title">Trò chơi chưa bắt đầu</string>
+    <string name="startGame_modal_message">Bạn có muốn bắt đầu trò chơi</string>
+    <string name="agree">Có</string>
+    <string name="disagree">Không</string>
+    <string name="wrongAnswer_modal_title">Đáp án không chính xác</string>
+    <string name="accept">Ok</string>
+    <string name="losing_message">Bạn đã thua</string>
+    <string name="winning_message">Bạn đã thắng</string>
+    <string name="playAgain_button">Chơi lại</string>
+    <string name="resetTimer_modal_title">Khởi động lại trò chơi</string>
+    <string name="resetTimer_modal_message">Bạn có muốn khởi động lại trò chơi ?</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="guessesLeft">Bạn còn %1$d lượt đoán</string>
+</resources>

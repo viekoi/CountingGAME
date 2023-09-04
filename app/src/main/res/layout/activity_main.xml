@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/black"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:descendantFocusability="blocksDescendants"
+    >
 
    <LinearLayout
        android:layout_width="match_parent"
@@ -18,18 +20,18 @@
 
 
        <Button
-           android:layout_width="wrap_content"
+           android:layout_width="0dp"
            android:layout_height="wrap_content"
            android:layout_weight="1"
            android:textAlignment="center"
-           android:text="Start"
+           android:text="@string/start_game"
            android:textColor="@color/white"
            android:background="@android:color/transparent"
            android:id="@+id/startStopButton"
            android:onClick="startStopTapped"
            />
        <TextView
-           android:layout_width="wrap_content"
+           android:layout_width="0dp"
            android:layout_height="wrap_content"
            android:layout_weight="1"
            android:textAlignment="center"
@@ -37,39 +39,42 @@
            android:textColor="@color/white"
            android:text="00 : 00 : 00"
            />
-       <Button
-           android:layout_width="wrap_content"
+
+       <Spinner
+           android:id="@+id/langSpinner"
+           android:layout_width="0dp"
            android:layout_height="wrap_content"
+           android:layout_gravity="center"
            android:layout_weight="1"
            android:textAlignment="center"
-           android:text="Restart"
            android:textColor="@color/white"
-           android:background="@android:color/transparent"
-           android:id="@+id/restartButton"
-           android:onClick="resetTapped"
+          />
            />
 
+
+       />
+
    </LinearLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <GridLayout
-            android:layout_marginTop="10dp"
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnCount="4"
+            android:layout_height="wrap_content"
+            android:id="@+id/nextNumber"
+            android:textAlignment="center"
+            android:textSize="50dp"
+            />
+
+        <GridView
             android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:numColumns="4"
             >
 
 
+        </GridView>
 
-
-
-
-
-
-        </GridLayout>
-    </ScrollView>
 
 
 </LinearLayout>

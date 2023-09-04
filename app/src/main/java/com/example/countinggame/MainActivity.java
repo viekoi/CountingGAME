@@ -1,24 +1,29 @@
 package com.example.countinggame;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridLayout;
+
+import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompat {
+    GridView gridView;
     TextView timerText;
     Button stopStartButton;
     Double time = 0.0;
@@ -27,51 +32,105 @@ public class MainActivity extends AppCompatActivity {
     Timer timer;
     TimerTask  timerTask;
 
-    GridLayout gridView;
+    Spinner langSpinner;
 
-    ArrayList<Integer> intArr = new ArrayList<Integer>();
 
+    ArrayList<GameButton> gameButtonArrayList;
 
     Integer currentNumber = 1;
     Integer guessesLeft = 3;
 
-
+    TextView nextNumber;
     boolean timerStarted = false;
+
+    MyCustomAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //variables
+
         timerText = findViewById(R.id.timerText);
         stopStartButton = findViewById(R.id.startStopButton);
         gridView = findViewById(R.id.gridView);
 
+        nextNumber = findViewById(R.id.nextNumber);
         timer = new Timer();
+        LanguageManager languageManager = new LanguageManager(MainActivity.this);
+        //spinner
+        langSpinner = findViewById(R.id.langSpinner);
+        String[] langOptions = {getResources().getString(R.string.language),"EN","VI"};
+        ArrayAdapter<String> langAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, langOptions);
+        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        langSpinner.setAdapter(langAdapter);
 
+
+       langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+           public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+               Object item = parent.getItemAtPosition(pos);
+               if(pos == 0){
+                   System.out.println(pos);
+                  return;
+               }
+
+               languageManager.updateResource(item.toString().toLowerCase());
+               finish();
+               startActivity(getIntent());
+
+           }
+           public void onNothingSelected(AdapterView<?> parent) {
+           }
+       });
+
+
+        //render buttons
+        gameButtonArrayList = new ArrayList<>();
         for (int i = 1; i<=maxRange;i++){
-            intArr.add(i);
+            GameButton newGameButton = new GameButton(i);
+            gameButtonArrayList.add(newGameButton);
         }
+        renderItems();
 
-        renderGameButton();
 
     }
 
-    private void renderGameButton (){
-        Collections.shuffle(intArr);
-
-        for (Integer number: intArr
-        ) {
-            addButton(number);
-        }
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+        System.exit(0);
     }
 
-    public void resetTapped(View view)
+
+
+    private void renderItems (){
+        Collections.shuffle(gameButtonArrayList);
+        adapter = new MyCustomAdapter(getApplicationContext(),gameButtonArrayList);
+
+        gridView.setAdapter(adapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Button tappedButton = findViewById(view.getId());
+                gameButtonTapped(tappedButton);
+            }
+        });
+    }
+
+
+
+    public void resetTapped()
     {
         AlertDialog.Builder resetAlert = new AlertDialog.Builder(this);
-        resetAlert.setTitle("Reset Timer");
-        resetAlert.setMessage("Are you sure you want to reset the timer?");
-        resetAlert.setPositiveButton("Reset", new DialogInterface.OnClickListener()
+        resetAlert.setTitle(getResources().getString(R.string.resetTimer_modal_title));
+        resetAlert.setMessage(getResources().getString(R.string.resetTimer_modal_message));
+        resetAlert.setPositiveButton(getResources().getString(R.string.agree), new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
@@ -84,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        resetAlert.setNeutralButton("Cancel", new DialogInterface.OnClickListener()
+        resetAlert.setNeutralButton(getResources().getString(R.string.disagree), new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
@@ -103,13 +162,10 @@ public class MainActivity extends AppCompatActivity {
         {
             //onStop
             onStartTimer();
-        } else if (timerStarted  && time > 0) {
-            //onResume
-            onStopTimer();
-        } else
+        }else
         {
             //onReset
-           onResetTimer();
+           resetTapped();
         }
     }
 
@@ -158,25 +214,15 @@ public class MainActivity extends AppCompatActivity {
         return String.format("%02d",hours) + " : " + String.format("%02d",minutes) + " : " + String.format("%02d",seconds);
     }
 
-    private void addButton(Integer number) {
-        final View view = getLayoutInflater().inflate(R.layout.add_button,null);
-        Button gameButton = view.findViewById(R.id.gameButton);
-        if(gameButton == null){
-            System.out.println("abc");
-           return;
-        }
-        gameButton.setText(number.toString());
-        gameButton.setId(number);
-        gridView.addView(view);
-    }
 
-    public void gameButtonTapped (View view){
-        Button tappedButton = findViewById(view.getId());
+
+    public void gameButtonTapped (Button view){
+
         if(!timerStarted){
             AlertDialog.Builder startAlert = new AlertDialog.Builder(this);
-            startAlert.setTitle("The game hasnt start yet ?");
-            startAlert.setMessage("Start the game ?");
-            startAlert.setPositiveButton("No", new DialogInterface.OnClickListener()
+            startAlert.setTitle(getResources().getString(R.string.startGame_modal_title));
+            startAlert.setMessage(getResources().getString(R.string.startGame_modal_message));
+            startAlert.setPositiveButton(getResources().getString(R.string.disagree), new DialogInterface.OnClickListener()
             {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i)
@@ -185,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            startAlert.setNeutralButton("Yes", new DialogInterface.OnClickListener()
+            startAlert.setNeutralButton(getResources().getString(R.string.agree), new DialogInterface.OnClickListener()
             {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i)
@@ -200,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 onWrongAnswer();
 
             }else {
-                onRightAnswer(tappedButton);
+                onRightAnswer(view);
             }
         }
 
@@ -211,42 +257,37 @@ public class MainActivity extends AppCompatActivity {
 
     private  void  onRightAnswer( Button tappedButton){
         currentNumber++;
-        tappedButton.setEnabled(false);
         if(currentNumber == maxRange + 1){
-            AlertDialog.Builder winningAlert = new AlertDialog.Builder(this);
-            winningAlert.setTitle("You Won");
-            winningAlert.setMessage("Great job");
-            winningAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    onWon();
-                }
-            });
-            winningAlert.show();
+            onWon();
         }
+        Integer currentDisplayNumber = currentNumber - 1;
+        nextNumber.setText(currentDisplayNumber.toString());
+        tappedButton.setEnabled(false);
+        tappedButton.setVisibility(View.GONE);
+
 
     }
     private void onWrongAnswer(){
         guessesLeft--;
-
-        AlertDialog.Builder wrongAnswerAlert = new AlertDialog.Builder(this);
-
-            String message = guessesLeft == 0 ? "You Lost":"You have " +guessesLeft +" left";
-            wrongAnswerAlert.setTitle("Wrong answer");
+        if(guessesLeft > 0){
+            AlertDialog.Builder wrongAnswerAlert = new AlertDialog.Builder(this);
+            String message = String.format(getResources().getString(R.string.guessesLeft),guessesLeft);
+            wrongAnswerAlert.setTitle(getResources().getString(R.string.wrongAnswer_modal_title));
             wrongAnswerAlert.setMessage(message);
-            wrongAnswerAlert.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+            wrongAnswerAlert.setPositiveButton(getResources().getString(R.string.accept), new DialogInterface.OnClickListener()
             {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i)
                 {
                 }
             });
+            wrongAnswerAlert.show();
+        }
+
 
         if(guessesLeft == 0) onLost();
 
-        wrongAnswerAlert.show();
+
 
 
 
@@ -255,37 +296,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onLost (){
-        onResetTimer();
+        Intent i = new Intent(getApplicationContext(), LosingActivity.class);
+        startActivity(i);
     }
 
     private  void onWon(){
-        onResetTimer();
+
+        Intent i = new Intent(getApplicationContext(), WinningActivity.class);
+        startActivity(i);
+
     }
 
 
     private void onStartTimer(){
         timerStarted = true;
-        setButtonUI("STOP");
+        setButtonUI(getResources().getString(R.string.restart_game));
         startTimer();
     }
 
-    private void onStopTimer(){
-        timerStarted = false;
-        setButtonUI("Resume");
-        timerTask.cancel();
-    }
+
 
     private void onResetTimer(){
         timerStarted = false;
-        setButtonUI("START");
+        setButtonUI(getResources().getString(R.string.start_game));
         timerTask.cancel();
         time = 0.0;
         timerText.setText(formatTime(0,0,0));
         currentNumber = 1;
         guessesLeft = 3;
-        gridView.removeAllViews();
-        renderGameButton();
+        renderItems();
+        nextNumber.setText("");
     }
+
 
 
 

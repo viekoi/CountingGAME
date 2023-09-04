@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_columnWeight="1"
-    android:layout_rowWeight="1"
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="fill_parent"
+    android:layout_height="80dp"
+    android:text="1"
+    android:id="@+id/gameButton"
+    android:textColor="@color/white"
+    android:gravity="center"
+    android:focusable="false"
+    android:clickable="false"
+    android:focusableInTouchMode="false"
     >
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="1"
-        android:id="@+id/gameButton"
-        android:layout_gravity="center"
-        android:onClick="gameButtonTapped"
-        />
-</LinearLayout>
+
+</Button>

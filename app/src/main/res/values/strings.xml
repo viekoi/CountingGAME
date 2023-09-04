@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">CountingGame</string>
+    <string name="start_game">Start</string>
+    <string name="restart_game">Restart</string>
+    <string name="startGame_modal_title">The game has not start yet</string>
+    <string name="startGame_modal_message">Do you want to start the game ?</string>
+    <string name="agree">yes</string>
+    <string name="disagree">no</string>
+    <string name="wrongAnswer_modal_title">Wrong answer</string>
+    <string name="accept">Ok</string>
+    <string name="losing_message">Sorry you lose</string>
+    <string name="winning_message">Congrats you won</string>
+    <string name="playAgain_button">Play again</string>
+    <string name="resetTimer_modal_title">Reset the game</string>
+    <string name="resetTimer_modal_message">Do you want to reset the game ?</string>
+    <string name="language">Language</string>
+    <string name="guessesLeft">You have %1$d guess left</string>
+
+
+
 </resources>
